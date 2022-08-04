@@ -82,6 +82,26 @@ describe("map", () => {
     expect(map.get({ x: 4, y: 4 }).char).toBe("@");
   });
 
+  it("throws descriptive error when set out of bounds", () => {
+    let map = new Map({ w: 5, h: 5 });
+
+    expect(() => {
+      map.set({ x: -1, y: -1 }, { char: "@" });
+    }).toThrow(
+      `Position outside of map bounds. Pos at (-1, -1) but dims were (5, 5)`
+    );
+  });
+
+  it("throws descriptive error when get out of bounds", () => {
+    let map = new Map({ w: 5, h: 5 });
+
+    expect(() => {
+      map.get({ x: 6, y: 5 }, { char: "@" });
+    }).toThrow(
+      `Position outside of map bounds. Pos at (6, 5) but dims were (5, 5)`
+    );
+  });
+
   it("by default makes newly set tiles with chars unwalkable", () => {
     let map = new Map({ w: 5, h: 5 });
 

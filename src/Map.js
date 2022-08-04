@@ -16,10 +16,13 @@ export default class Map {
   }
 
   setChar(pos, char) {
+    this.get(pos).char = char;
+  }
+
+  guardPosOutOfBounds(pos) {
     if (this.posOutOfBounds(pos)) {
       throw new Error(this.makeOutOfBoundsMsg(pos));
     }
-    this.get(pos).char = char;
   }
 
   makeOutOfBoundsMsg(pos) {
@@ -48,17 +51,16 @@ export default class Map {
   }
 
   getChar(pos) {
-    if (this.posOutOfBounds(pos)) {
-      throw new Error(this.makeOutOfBoundsMsg(pos));
-    }
     return this.get(pos).char;
   }
 
   set(pos, tileInfo) {
+    this.guardPosOutOfBounds(pos);
     this.tiles[pos.x][pos.y] = new Tile(tileInfo);
   }
 
   get(pos) {
+    this.guardPosOutOfBounds(pos);
     return this.tiles[pos.x][pos.y];
   }
 }
