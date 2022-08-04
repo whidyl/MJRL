@@ -41,7 +41,7 @@ describe("WorldController", () => {
     expect(player.pos).toStrictEqual({ x: 6, y: 4 });
   });
 
-  it("Doesn't move agent over boarder when moveAgentTo called", () => {
+  it("Doesn't move agent over boarder when moveAgentTo outside border", () => {
     let map = new Map({ w: 10, h: 10 });
     let player = new Agent({ x: 9, y: 5 }, { id: "player" });
     let worldCont = new WorldController(new World(map, [player]));
@@ -49,5 +49,16 @@ describe("WorldController", () => {
     worldCont.moveAgentTo(player, { dx: 1, dy: 0 });
 
     expect(player.pos).toStrictEqual({ x: 9, y: 5 });
+  });
+
+  it("Doesn't move agent over unwalkable tile when moveAgentTo unmovable tile", () => {
+    let map = new Map({ w: 10, h: 10 });
+    map.set({ x: 5, y: 5 }, { char: "#", isWalkable: false });
+    let player = new Agent({ x: 4, y: 5 }, { id: "player" });
+    let worldCont = new WorldController(new World(map, [player]));
+
+    worldCont.moveAgentTo(player, { dx: 1, dy: 0 });
+
+    expect(player.pos).toStrictEqual({ x: 4, y: 5 });
   });
 });

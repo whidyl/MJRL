@@ -70,16 +70,18 @@ describe("map", () => {
     expect(map.get({ x: 3, y: 3 }).char).toBe("");
   });
 
-  it("gets expected values after construct set", () => {
+  it("gets expected values after set", () => {
     let map = new Map({ w: 5, h: 5 });
 
-    map.set({ x: 3, y: 3 }, { char: "#" });
-    map.set({ x: 4, y: 4 }, { char: "@" });
+    map.set({ x: 3, y: 3 }, { char: "#", isWalkable: false });
+    map.set({ x: 4, y: 4 }, { char: "@", isWalkable: true });
 
     expect(map.get({ x: 3, y: 3 }).char).toBe("#");
+    expect(map.get({ x: 3, y: 3 }).isWalkable).toBe(false);
     expect(map.get({ x: 2, y: 3 }).char).toBe("");
     expect(map.get({ x: 4, y: 3 }).char).toBe("");
     expect(map.get({ x: 4, y: 4 }).char).toBe("@");
+    expect(map.get({ x: 4, y: 4 }).isWalkable).toBe(true);
   });
 
   it("throws descriptive error when set out of bounds", () => {
@@ -103,6 +105,14 @@ describe("map", () => {
   });
 
   it("by default makes newly set tiles with chars unwalkable", () => {
+    let map = new Map({ w: 5, h: 5 });
+
+    map.set({ x: 3, y: 3 }, { char: "@" });
+
+    expect(map.get({ x: 3, y: 3 }).isWalkable).toBe(false);
+  });
+
+  it("by default makes empty tiles walkable", () => {
     let map = new Map({ w: 5, h: 5 });
 
     map.set({ x: 3, y: 3 }, { char: "@" });

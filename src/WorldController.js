@@ -1,3 +1,5 @@
+import { offsettedPos } from "./utilities";
+
 export default class WorldController {
   constructor(world) {
     if (!world) {
@@ -23,9 +25,16 @@ export default class WorldController {
   }
 
   moveAgentTo(agent, dpos) {
-    const newPos = { x: agent.pos.x + dpos.dx, y: agent.pos.y + dpos.dy };
-    if (!this.target.map.posOutOfBounds(newPos)) {
+    const newPos = offsettedPos(agent.pos, dpos);
+    if (
+      !this.tgtMap.posOutOfBounds(newPos) &&
+      this.tgtMap.get(newPos).isWalkable
+    ) {
       agent.pos = newPos;
     }
+  }
+
+  get tgtMap() {
+    return this.target.map;
   }
 }
