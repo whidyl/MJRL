@@ -74,11 +74,15 @@ describe("map", () => {
     let map = new Map({ w: 5, h: 5 });
 
     map.set({ x: 3, y: 3 }, { char: "#" });
+    map.set({ x: 4, y: 4 }, { char: "@" });
 
     expect(map.get({ x: 3, y: 3 }).char).toBe("#");
+    expect(map.get({ x: 2, y: 3 }).char).toBe("");
+    expect(map.get({ x: 4, y: 3 }).char).toBe("");
+    expect(map.get({ x: 4, y: 4 }).char).toBe("@");
   });
 
-  it("by default makes newly set tiles with chars immovable", () => {
+  it("by default makes newly set tiles with chars unwalkable", () => {
     let map = new Map({ w: 5, h: 5 });
 
     map.set({ x: 3, y: 3 }, { char: "@" });

@@ -2,8 +2,6 @@ import WorldController from "./WorldController.js";
 import World from "./World.js";
 import Map from "./Map.js";
 import Agent from "./Agent.js";
-import Pos from "./ParamClasses/Pos.js";
-import Dims from "./ParamClasses/Dims.js";
 
 function makeTestWorld() {
   let map = new Map({ w: 10, h: 10 });
@@ -52,6 +50,4 @@ describe("WorldController", () => {
 
     expect(player.pos).toStrictEqual({ x: 9, y: 5 });
   });
-
-  describe("");
 });
