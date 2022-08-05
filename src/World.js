@@ -13,9 +13,4 @@ export default class World {
     this.agents = agents;
     this.map = map;
   }
-
-  moveAgent(agent, offset) {
-    agent.pos.x += offset.x;
-    agent.pos.y += offset.y;
-  }
 }

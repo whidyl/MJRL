@@ -56,11 +56,11 @@ export default class Map {
 
   set(pos, tileInfo) {
     this.guardPosOutOfBounds(pos);
-    this.tiles[pos.x][pos.y] = new Tile(tileInfo);
+    this.tiles[pos.y][pos.x] = new Tile(tileInfo);
   }
 
   get(pos) {
     this.guardPosOutOfBounds(pos);
-    return this.tiles[pos.x][pos.y];
+    return this.tiles[pos.y][pos.x];
   }
 }

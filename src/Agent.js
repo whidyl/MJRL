@@ -8,20 +8,4 @@ export default class Agent {
       this.id = info.id || "";
     }
   }
-
-  goN(d) {
-    this.pos.y -= d;
-  }
-
-  goE(d) {
-    this.pos.x += d;
-  }
-
-  goS(d) {
-    this.pos.y += d;
-  }
-
-  goW(d) {
-    this.pos.x -= d;
-  }
 }
