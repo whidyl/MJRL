@@ -1,7 +1,7 @@
 import Pos from "./ParamClasses/Pos.js";
 
 export default class Agent {
-  constructor(pos = new Pos(5, 5), info) {
+  constructor(pos = { x: 0, y: 0 }, info) {
     this.pos = pos;
     if (info) {
       this.char = info.char || "@";

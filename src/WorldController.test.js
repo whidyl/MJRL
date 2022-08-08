@@ -24,12 +24,24 @@ describe("WorldController", () => {
     expect(selected.id).toBe("player");
   });
 
-  it("throws error if agent can't be found", () => {
+  it("throws error if agent can't be found by id", () => {
     let worldCont = new WorldController(makeTestWorld());
 
     expect(() => {
       worldCont.findAgent({ id: "playa" });
     }).toThrow("could not find agent with id 'playa'");
+    expect(() => {
+      worldCont.findAgent({ id: "playr" });
+    }).toThrow("could not find agent with id 'playr'");
+  });
+
+  it("Can find agent based on pos", () => {
+    let worldCtrl = new WorldController(makeTestWorld());
+
+    const found = worldCtrl.findAgent({ pos: { x: 5, y: 5 } });
+
+    expect(found).not.toBeNull();
+    expect(found.id).toBe("player");
   });
 
   it("moves agent as expected when moveAgentTo called", () => {
@@ -62,10 +74,10 @@ describe("WorldController", () => {
     expect(player.pos).toStrictEqual({ x: 4, y: 5 });
   });
 
-  describe("look", () => {
+  describe("'look' with a 3x4 map", () => {
     let worldCtrl;
     beforeEach(() => {
-      let map = new Map({ w: 3, h: 3 });
+      let map = new Map({ w: 4, h: 3 });
       let world = new World(map);
       worldCtrl = new WorldController(world);
     });
@@ -112,6 +124,37 @@ describe("WorldController", () => {
       expect(desc).toBe("");
     });
 
-    it.skip("returns name and description for tile and agent at pos", () => {});
+    it("Throws error for looking outside bounds", () => {
+      expect(() => worldCtrl.look({ x: 4, y: 4 })).toThrow(
+        "Position outside of map bounds. Pos at (4, 4) but dims were (4, 3)"
+      );
+    });
+
+    it("Returns img file path for valid tile", () => {
+      worldCtrl.target.map.set(
+        { x: 1, y: 1 },
+        { name: "Grass", desc: "Grass tile." }
+      );
+
+      worldCtrl.target.map.set(
+        { x: 1, y: 2 },
+        { name: "Desert", desc: "Desert tile." }
+      );
+
+      const imgPath1 = worldCtrl.look({ x: 1, y: 1 })[0].imgPath;
+      const imgPath2 = worldCtrl.look({ x: 1, y: 2 })[0].imgPath;
+
+      expect(imgPath1).toBe("./Images/Tiles/Grass/grass1.jpg");
+      expect(imgPath2).toBe("./Images/Tiles/Desert/desert1.jpg");
+    });
+
+    it("Returns 2 objects for agent on tile", () => {
+      worldCtrl.target.map.set({ x: 1, y: 0 }, { name: "Grass" });
+      worldCtrl.target.agents.push(new Agent({ x: 1, y: 0 }, { id: "Player" }));
+
+      const seen = worldCtrl.look({ x: 1, y: 0 });
+
+      expect(seen.length).toBe(2);
+    });
   });
 });

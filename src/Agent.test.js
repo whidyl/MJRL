@@ -5,6 +5,13 @@ describe("Agent", () => {
   it("is positioned 0,0 by default", () => {
     let agent = new Agent();
 
-    expect(agent.pos).toStrictEqual(new Pos(5, 5));
+    expect(agent.pos).toStrictEqual({ x: 0, y: 0 });
+  });
+
+  it("Has properties provided in info after constructing", () => {
+    let agent = new Agent({ x: 1, y: 1 }, { id: "Player", char: "@" });
+
+    expect(agent.id).toBe("Player");
+    expect(agent.char).toBe("@");
   });
 });

@@ -17,11 +17,20 @@ export default class WorldController {
       }
     }
 
-    throw new Error("could not find agent with id 'playa'");
+    throw new Error(`could not find agent with id '${id}'`);
+  }
+
+  findAgentFromPos(pos) {
+    for (const agent of this.target.agents) {
+      if (agent.pos.x === pos.x && agent.pos.y === pos.y) {
+        return agent;
+      }
+    }
   }
 
   findAgent(info) {
     if (info.id) return this.findAgentFromId(info.id);
+    if (info.pos) return this.findAgentFromPos(info.pos);
   }
 
   moveAgentTo(agent, dpos) {
@@ -44,11 +53,19 @@ export default class WorldController {
     if (tile.name === null) {
       throw new Error("Tried to look at a tile with a null name.");
     }
-    return [
+    let ret = [
       {
         name: tile.name,
-        desc: tile.desc || ""
+        desc: tile.desc || "",
+        imgPath: `./Images/Tiles/${tile.name}/${tile.name.toLowerCase()}1.jpg`
       }
     ];
+
+    try {
+      let agent = this.findAgentFromPos(pos);
+      ret.push(agent);
+    } catch {}
+
+    return ret;
   }
 }
