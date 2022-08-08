@@ -1,8 +1,16 @@
+import { copy } from "./utilities";
+
 class Tile {
   constructor(info) {
     this.char = info.char || "";
     this.isWalkable = info.isWalkable || false;
+    this.name = info.name || null;
+    this.desc = info.desc || null;
   }
+}
+
+function initEmptyMtx(dims) {
+  return [...Array(dims.h)].map((_) => Array(dims.w));
 }
 
 export default class Map {
@@ -10,9 +18,12 @@ export default class Map {
     if (!dims) {
       throw new Error("A new map must be provided with a dims object.");
     }
-    this.tiles = [...Array(dims.h)].map((_) =>
-      Array(dims.w).fill(new Tile({ char: "", isWalkable: true }))
-    );
+    this.tiles = initEmptyMtx(dims);
+    for (var x = 0; x < this.tiles[0].length; x++) {
+      for (var y = 0; y < this.tiles.length; y++) {
+        this.tiles[y][x] = new Tile({ char: "", isWalkable: true });
+      }
+    }
   }
 
   setChar(pos, char) {
@@ -62,5 +73,42 @@ export default class Map {
   get(pos) {
     this.guardPosOutOfBounds(pos);
     return this.tiles[pos.y][pos.x];
+  }
+
+  [Symbol.iterator]() {
+    //This is (-1, 0) initially because we return the value after incrementing.
+    let currentPos = { x: -1, y: 0 };
+    const makeReturn = (options) => {
+      return {
+        value: [this.get(currentPos), copy(currentPos)],
+        done: options.isDone
+      };
+    };
+
+    const onNext = () => {
+      //if its hugging the right edge and not the bottom edge, we should jump to the next line.
+      if (
+        currentPos.y < this.getHeight() - 1 &&
+        currentPos.x === this.getWidth() - 1
+      ) {
+        currentPos.y++;
+        currentPos.x = 0;
+
+        return makeReturn({ isDone: false });
+      }
+      //if not hugging the right edge or bottom edge, we move one to the right
+      if (currentPos.x < this.getWidth() - 1) {
+        currentPos.x++;
+
+        return makeReturn({ isDone: false });
+      }
+
+      // if its hugging the right edge and bottom edge, we are done iterating.
+      return makeReturn({ isDone: true });
+    };
+
+    return {
+      next: onNext
+    };
   }
 }

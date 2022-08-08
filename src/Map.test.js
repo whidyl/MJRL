@@ -11,13 +11,21 @@ describe("map", () => {
     }).toThrow("A new map must be provided with a dims object.");
   });
 
-  it("has expected data when char added center", () => {
-    let map = new Map(new Dims(10, 10));
+  it("has unique tiles after constructing", () => {
+    let map = new Map({ w: 10, h: 10 });
 
-    map.setChar(new Pos(5, 5), "@");
+    expect(map.get({ x: 5, y: 5 })).not.toBe(map.get({ x: 4, y: 5 }));
+    expect(map.get({ x: 5, y: 5 })).not.toBe(map.get({ x: 5, y: 4 }));
+  });
 
-    expect(map.getChar(new Pos(5, 5))).toBe("@");
-    expect(map.getChar(new Pos(4, 5))).toBe("");
+  it.skip("has expected data when char added center", () => {
+    let map = new Map({ w: 10, h: 10 });
+
+    map.setChar({ x: 5, y: 5 }, "@");
+
+    expect(map.getChar({ x: 5, y: 5 })).toBe("@");
+    expect(map.get({ x: 4, y: 5 }).char).toBe("");
+    expect(map.getChar({ x: 4, y: 5 })).toBe("");
   });
 
   it("has expected data when char added top right", () => {
@@ -118,5 +126,55 @@ describe("map", () => {
     map.set({ x: 3, y: 3 }, { char: "@" });
 
     expect(map.get({ x: 3, y: 3 }).isWalkable).toBe(false);
+  });
+
+  it.each([
+    [1, 2],
+    [4, 3],
+    [5, 5]
+  ])("iterates correct number of times when iterated", (w, h) => {
+    const map = new Map({ w: w, h: h });
+    let count = 0;
+
+    for (const _ of map) {
+      count++;
+    }
+
+    expect(count).toBe(w * h);
+  });
+
+  it("goes through expected tiles when 3x2 iterated", () => {
+    const map = new Map({ w: 3, h: 2 });
+    let chars = "";
+
+    for (const [tile] of map) {
+      tile.char = "0";
+    }
+    map.setChar({ x: 0, y: 0 }, "1");
+    map.setChar({ x: 2, y: 0 }, "2");
+    map.setChar({ x: 1, y: 1 }, "3");
+    for (const [tile] of map) {
+      chars += tile.char;
+    }
+
+    expect(chars).toBe("102030");
+  });
+
+  it("goes through position when 2x3 iterated", () => {
+    const map = new Map({ w: 2, h: 3 });
+    let positions = [];
+
+    for (const [tile, pos] of map) {
+      positions.push(pos);
+    }
+
+    expect(positions).toStrictEqual([
+      { x: 0, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: 1 },
+      { x: 1, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 2 }
+    ]);
   });
 });

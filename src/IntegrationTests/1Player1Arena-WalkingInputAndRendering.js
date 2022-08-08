@@ -6,10 +6,8 @@ import World from "../World";
 import WorldController from "../WorldController";
 
 function drawMap(display, map) {
-  for (let x = 0; x < map.getWidth(); x++) {
-    for (let y = 0; y < map.getHeight(); y++) {
-      display.draw(x, y, map.getChar({ x: x, y: y }));
-    }
+  for (const [tile, pos] of map) {
+    display.draw(pos.x, pos.y, tile.char);
   }
 }
 
@@ -27,6 +25,7 @@ export default class SimpleWalkingInputAndRenderingTest {
     this.worldCtrl = new WorldController(this.world);
     this.display = new Display({ width: 100, height: 50 });
 
+    //generate arena with part of wall removed
     const arenaGen = new Arena(15, 15);
     arenaGen.create((x, y, isWall) => {
       const wall = { char: "#", isWalkable: false };
@@ -47,7 +46,6 @@ export default class SimpleWalkingInputAndRenderingTest {
       else if (e.key === "ArrowLeft")
         this.worldCtrl.moveAgentTo(player, { dx: -1, dy: 0 });
       this.draw();
-      console.log("boop");
     });
   }
 

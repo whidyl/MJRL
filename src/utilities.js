@@ -4,3 +4,7 @@ export function offsettedPos(pos, dpos) {
     y: pos.y + dpos.dy
   };
 }
+
+export function copy(object) {
+  return JSON.parse(JSON.stringify(object));
+}

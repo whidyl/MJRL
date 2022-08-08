@@ -35,6 +35,20 @@ export default class WorldController {
   }
 
   get tgtMap() {
+    //this function exists for shorthand.
     return this.target.map;
+  }
+
+  look(pos) {
+    const tile = this.tgtMap.get(pos);
+    if (tile.name === null) {
+      throw new Error("Tried to look at a tile with a null name.");
+    }
+    return [
+      {
+        name: tile.name,
+        desc: tile.desc || ""
+      }
+    ];
   }
 }

@@ -61,4 +61,57 @@ describe("WorldController", () => {
 
     expect(player.pos).toStrictEqual({ x: 4, y: 5 });
   });
+
+  describe("look", () => {
+    let worldCtrl;
+    beforeEach(() => {
+      let map = new Map({ w: 3, h: 3 });
+      let world = new World(map);
+      worldCtrl = new WorldController(world);
+    });
+
+    it("returns name for tile at specified location", () => {
+      const map = worldCtrl.target.map;
+      map.set({ x: 1, y: 1 }, { name: "bar" });
+      map.set({ x: 0, y: 0 }, { name: "foo" });
+
+      const name1 = worldCtrl.look({ x: 1, y: 1 })[0].name;
+      const name2 = worldCtrl.look({ x: 0, y: 0 })[0].name;
+
+      expect(name1).toBe("bar");
+      expect(name2).toBe("foo");
+    });
+
+    it("returns name and description for tile at pos", () => {
+      const map = worldCtrl.target.map;
+      map.set({ x: 1, y: 1 }, { name: "bar", desc: "Typical bar." });
+      map.set({ x: 0, y: 0 }, { name: "foo", desc: "Typical foo." });
+
+      const name1 = worldCtrl.look({ x: 1, y: 1 })[0].name;
+      const desc1 = worldCtrl.look({ x: 1, y: 1 })[0].desc;
+      const name2 = worldCtrl.look({ x: 0, y: 0 })[0].name;
+      const desc2 = worldCtrl.look({ x: 0, y: 0 })[0].desc;
+
+      expect(name1).toBe("bar");
+      expect(desc1).toBe("Typical bar.");
+      expect(name2).toBe("foo");
+      expect(desc2).toBe("Typical foo.");
+    });
+
+    it("Throws error looking for tile with null name", () => {
+      expect(() => worldCtrl.look({ x: 1, y: 1 })).toThrow(
+        "Tried to look at a tile with a null name."
+      );
+    });
+
+    it("Returns '' for tile with null description but not null name", () => {
+      worldCtrl.target.map.set({ x: 1, y: 1 }, { name: "foo" });
+
+      const desc = worldCtrl.look({ x: 1, y: 1 })[0].desc;
+
+      expect(desc).toBe("");
+    });
+
+    it.skip("returns name and description for tile and agent at pos", () => {});
+  });
 });
