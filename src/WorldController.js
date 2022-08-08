@@ -26,6 +26,8 @@ export default class WorldController {
         return agent;
       }
     }
+
+    throw new Error(`could not find agent with pos (${pos.x}, ${pos.y})`);
   }
 
   findAgent(info) {
