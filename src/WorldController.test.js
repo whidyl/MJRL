@@ -54,6 +54,18 @@ describe("WorldController", () => {
     });
   });
 
+  describe("agentExistsWith", () => {
+    it("returns true for pos", () => {
+      let worldCtrl = new WorldController(makeTestWorld());
+
+      const shouldExist = worldCtrl.agentExistsWithPos({ x: 5, y: 5 });
+      const shouldntExist = worldCtrl.agentExistsWithPos({ x: 3, y: 5 });
+
+      expect(shouldExist).toBe(true);
+      expect(shouldntExist).toBe(false);
+    });
+  });
+
   describe("move", () => {
     it("moves agent as expected when moveAgentTo called", () => {
       let worldCont = new WorldController(makeTestWorld());
@@ -160,14 +172,27 @@ describe("WorldController", () => {
       expect(imgPath2).toBe("./Images/Tiles/Desert/desert1.jpg");
     });
 
-    it("Returns 2 objects for agent on tile, they are the expected tile and agent, with agent at index 0.", () => {
-      worldCtrl.target.map.set({ x: 1, y: 0 }, { name: "Grass" });
-      worldCtrl.target.agents.push(new Agent({ x: 1, y: 0 }, { id: "Player" }));
+    describe("when agent is on tile at (1, 0)", () => {
+      beforeEach(() => {
+        worldCtrl.target.map.set({ x: 1, y: 0 }, { name: "Grass" });
+        worldCtrl.target.agents.push(
+          new Agent({ x: 1, y: 0 }, { name: "Wizard" })
+        );
+      });
 
-      const seen = worldCtrl.look({ x: 1, y: 0 });
+      it("Returns 2 objects: [0] is the agent, [1] is the tile.", () => {
+        const seen = worldCtrl.look({ x: 1, y: 0 });
 
-      //expect(seen.length).toBe(2);
-      //expect(seen[1].name).toBe("Grass");
+        expect(seen.length).toBe(2);
+        expect(seen[1].name).toBe("Grass");
+        expect(seen[0].name).toBe("Wizard");
+      });
+
+      it("Returns imgPath for agent", () => {
+        const seen = worldCtrl.look({ x: 1, y: 0 });
+
+        expect(seen[0].imgPath).toBe("./Images/Agents/Wizard/wizard1.jpg");
+      });
     });
   });
 });

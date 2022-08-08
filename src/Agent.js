@@ -5,7 +5,8 @@ export default class Agent {
     this.pos = pos;
     if (info) {
       this.char = info.char || "@";
-      this.id = info.id || "";
+      this.id = info.id || null;
+      this.name = info.name || null;
     }
   }
 }

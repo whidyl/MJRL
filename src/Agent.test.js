@@ -9,9 +9,13 @@ describe("Agent", () => {
   });
 
   it("Has properties provided in info after constructing", () => {
-    let agent = new Agent({ x: 1, y: 1 }, { id: "Player", char: "@" });
+    let agent = new Agent(
+      { x: 1, y: 1 },
+      { id: "Player", name: "Player", char: "@" }
+    );
 
     expect(agent.id).toBe("Player");
     expect(agent.char).toBe("@");
+    expect(agent.name).toBe("Player");
   });
 });
