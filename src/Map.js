@@ -7,6 +7,25 @@ class Tile {
     this.name = info.name || null;
     this.desc = info.desc || null;
   }
+
+  look() {
+    this.guardAgainstNullName();
+    return {
+      name: this.name,
+      desc: this.desc || "",
+      imgPath: this.imgPath
+    };
+  }
+
+  guardAgainstNullName() {
+    if (this.name === null) {
+      throw new Error("Tried to look at tile with a null name.");
+    }
+  }
+
+  get imgPath() {
+    return `./Images/Tiles/${this.name}/${this.name.toLowerCase()}1.jpg`;
+  }
 }
 
 function initEmptyMtx(dims) {

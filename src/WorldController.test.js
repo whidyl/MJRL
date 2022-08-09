@@ -136,7 +136,7 @@ describe("WorldController", () => {
 
     it("Throws error looking for tile with null name", () => {
       expect(() => worldCtrl.look({ x: 1, y: 1 })).toThrow(
-        "Tried to look at a tile with a null name."
+        "Tried to look at tile with a null name."
       );
     });
 
@@ -192,6 +192,14 @@ describe("WorldController", () => {
         const seen = worldCtrl.look({ x: 1, y: 0 });
 
         expect(seen[0].imgPath).toBe("./Images/Agents/Wizard/wizard1.jpg");
+      });
+
+      it("Throws error for agent with null name", () => {
+        worldCtrl.findAgentFromPos({ x: 1, y: 0 }).name = null;
+
+        expect(() => {
+          worldCtrl.look({ x: 1, y: 0 });
+        }).toThrow("Tried to look at agent with a null name.");
       });
     });
   });

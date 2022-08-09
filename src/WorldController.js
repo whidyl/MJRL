@@ -65,35 +65,16 @@ export default class WorldController {
   }
 
   look(pos) {
-    const tileNameToImgPath = (name) =>
-      `./Images/Tiles/${name}/${name.toLowerCase()}1.jpg`;
-    const agentNameToImgPath = (name) =>
-      `./Images/Agents/${name}/${name.toLowerCase()}1.jpg`;
+    let seen = [];
 
-    const tile = this.tgtMap.get(pos);
-    this.guardAgainstNullName(tile);
-
-    let ret = [];
     if (this.agentExistsWithPos(pos)) {
       const agent = this.findAgentFromPos(pos);
-      ret.push({
-        name: agent.name,
-        desc: agent.desc || "",
-        imgPath: agentNameToImgPath(agent.name)
-      });
+      seen.push(agent.look());
     }
-    ret.push({
-      name: tile.name,
-      desc: tile.desc || "",
-      imgPath: tileNameToImgPath(tile.name)
-    });
 
-    return ret;
-  }
+    const tile = this.tgtMap.get(pos);
+    seen.push(tile.look());
 
-  guardAgainstNullName(tile) {
-    if (tile.name === null) {
-      throw new Error("Tried to look at a tile with a null name.");
-    }
+    return seen;
   }
 }

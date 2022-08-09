@@ -9,4 +9,23 @@ export default class Agent {
       this.name = info.name || null;
     }
   }
+
+  look() {
+    this.guardAgainstNullName();
+    return {
+      name: this.name,
+      desc: this.desc || "",
+      imgPath: this.imgPath
+    };
+  }
+
+  guardAgainstNullName() {
+    if (this.name === null) {
+      throw new Error("Tried to look at agent with a null name.");
+    }
+  }
+
+  get imgPath() {
+    return `./Images/Agents/${this.name}/${this.name.toLowerCase()}1.jpg`;
+  }
 }
