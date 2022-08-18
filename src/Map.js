@@ -24,7 +24,9 @@ class Tile {
   }
 
   get imgPath() {
-    return `./Images/Tiles/${this.name}/${this.name.toLowerCase()}1.jpg`;
+    const folderName = this.name.replace(" ", "_");
+    const fileName = this.name.replace(" ", "_").toLowerCase();
+    return `./Images/Tiles/${folderName}/${fileName}1.png`;
   }
 }
 
@@ -97,6 +99,7 @@ export default class Map {
   [Symbol.iterator]() {
     //This is (-1, 0) initially because we return the value after incrementing.
     let currentPos = { x: -1, y: 0 };
+
     const makeReturn = (options) => {
       return {
         value: [this.get(currentPos), copy(currentPos)],

@@ -7,6 +7,7 @@ export default class Agent {
       this.char = info.char || "@";
       this.id = info.id || null;
       this.name = info.name || null;
+      this.desc = info.desc || null;
     }
   }
 
@@ -26,6 +27,8 @@ export default class Agent {
   }
 
   get imgPath() {
-    return `./Images/Agents/${this.name}/${this.name.toLowerCase()}1.jpg`;
+    const folderName = this.name.replace(" ", "_");
+    const fileName = this.name.replace(" ", "_").toLowerCase();
+    return `./Images/Agents/${folderName}/${fileName}1.png`;
   }
 }

@@ -168,15 +168,18 @@ describe("WorldController", () => {
       const imgPath1 = worldCtrl.look({ x: 1, y: 1 })[0].imgPath;
       const imgPath2 = worldCtrl.look({ x: 1, y: 2 })[0].imgPath;
 
-      expect(imgPath1).toBe("./Images/Tiles/Grass/grass1.jpg");
-      expect(imgPath2).toBe("./Images/Tiles/Desert/desert1.jpg");
+      expect(imgPath1).toBe("./Images/Tiles/Grass/grass1.png");
+      expect(imgPath2).toBe("./Images/Tiles/Desert/desert1.png");
     });
 
     describe("when agent is on tile at (1, 0)", () => {
       beforeEach(() => {
         worldCtrl.target.map.set({ x: 1, y: 0 }, { name: "Grass" });
         worldCtrl.target.agents.push(
-          new Agent({ x: 1, y: 0 }, { name: "Wizard" })
+          new Agent(
+            { x: 1, y: 0 },
+            { name: "Wizard", desc: "A wizard character." }
+          )
         );
       });
 
@@ -188,10 +191,31 @@ describe("WorldController", () => {
         expect(seen[0].name).toBe("Wizard");
       });
 
-      it("Returns imgPath for agent", () => {
+      it("Returns imgPath for agent (no space)", () => {
         const seen = worldCtrl.look({ x: 1, y: 0 });
 
-        expect(seen[0].imgPath).toBe("./Images/Agents/Wizard/wizard1.jpg");
+        expect(seen[0].imgPath).toBe("./Images/Agents/Wizard/wizard1.png");
+      });
+
+      it("Returns imgPath for agent and tile (spaces)", () => {
+        worldCtrl.findAgentFromPos({ x: 1, y: 0 }).name = "Grand Wizard";
+        worldCtrl.tgtMap.get({ x: 1, y: 0 }).name = "Dirty Stone";
+
+        const seen = worldCtrl.look({ x: 1, y: 0 });
+
+        expect(seen[0].imgPath).toBe(
+          "./Images/Agents/Grand_Wizard/grand_wizard1.png"
+        );
+
+        expect(seen[1].imgPath).toBe(
+          "./Images/Tiles/Dirty_Stone/dirty_stone1.png"
+        );
+      });
+
+      it("Returns desc for agent", () => {
+        const seen = worldCtrl.look({ x: 1, y: 0 });
+
+        expect(seen[0].desc).toBe("A wizard character.");
       });
 
       it("Throws error for agent with null name", () => {
